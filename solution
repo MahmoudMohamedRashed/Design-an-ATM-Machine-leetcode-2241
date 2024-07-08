@@ -1,0 +1,67 @@
+class ATM {
+private:
+    int atm[5];
+    int atm2[5];
+    int money[5] = {20, 50, 100, 200, 500};
+    vector<int> output = {0, 0, 0, 0, 0};
+
+public:
+    ATM() {
+        for (int i = 0; i < 5; i++) {
+            atm[i] = 0;
+            atm2[i] =0 ;
+        }
+    }
+
+    void deposit(vector<int> banknotesCount) {
+        for (int i = 0; i < 5; i++) {
+            atm[i] = atm[i] + banknotesCount[i];
+        }
+    }
+
+    vector<int> withdraw(int amount) {
+        int index = 4;
+        while ( index >=0 && ( (amount < (money[index])) || (atm[index] == 0)  ) ) {
+            index--;
+        }
+        if (index < 0) {
+            vector<int> out = {-1};
+            return out;
+        }
+        for ( int x = 0 ; x < 5 ; ++x ) 
+        {
+            atm2[x] = atm[x];
+            output[x] =0 ;
+        }
+        while (index >= 0 && amount != 0) {
+           if ( ( amount / money[index] ) > atm2[index] )
+           {
+               output[index] = atm2[index] ;
+               atm2[index] = 0 ;
+               amount = amount - ( output[index] * money[index]  ) ;
+               --index ;
+           }
+           else 
+           {
+               output[index] = amount / money[index] ;
+               atm2[index] = atm2[index] - output[index] ;
+               amount = amount - ( output[index] * money[index]  ) ;
+               --index ;
+           }
+        }
+        if ( amount > 0 ) 
+        {
+            vector<int> out = {-1};
+            return out;
+        }
+        for ( int x = 0 ; x < 5 ; ++x ) atm[x] = atm2[x];
+        return output;
+    }
+};
+
+/**
+ * Your ATM object will be instantiated and called as such:
+ * ATM* obj = new ATM();
+ * obj->deposit(banknotesCount);
+ * vector<int> param_2 = obj->withdraw(amount);
+ */
